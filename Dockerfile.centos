@@ -2,8 +2,8 @@ FROM centos:8 AS builder
 
 ARG KVER
 
-RUN dnf update -y && dnf makecache \  
-#  && dnf group install "Development Tools" -y \
+RUN dnf update -y \
+  && dnf makecache \  
   && dnf install -y wget \
   && wget "http://mirror.centos.org/centos/8/BaseOS/x86_64/os/Packages/kernel-headers-$KVER.rpm" \
   && yum -y localinstall "kernel-headers-$KVER.rpm" \
