@@ -142,15 +142,3 @@ wrapper() {
     echo "Running userspace wrapper using the kernel module container..."
     kvc_c_run --privileged "$IMAGE" "$@"
 }
-� 2021 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About

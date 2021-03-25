@@ -32,9 +32,7 @@ ARG KVER
 LABEL io.k8s.display-name="ice driver $KMODVER" \
   io.k8s.description="Container to install version $KMODVER of the Intel ice driver"
 
-RUN mkdir -p $builddir
-
-COPY --from=compiler ./RPMS/x86_64/ice-$KMODVER-1.x86_64.rpm $builddir
+COPY --from=compiler /build/RPMS/x86_64/ice-$KMODVER-1.x86_64.rpm .
 
 RUN dnf makecache \
   && dnf install -y wget \
@@ -42,8 +40,5 @@ RUN dnf makecache \
   && yum localinstall -y "kernel-headers-$KVER.rpm" \
   && wget "http://mirror.centos.org/centos/8/BaseOS/x86_64/os/Packages/kernel-core-$KVER.rpm" \
   && yum localinstall -y "kernel-core-$KVER.rpm" \
-  && dnf install -y $builddir/ice-$KMODVER-1.x86_64.rpm \
+  && dnf install -y ./ice-$KMODVER-1.x86_64.rpm \
   && dnf clean all
-
-ADD load-kmod.sh /usr/local/bin
-RUN chmod +x /usr/local/bin/load-kmod.sh
