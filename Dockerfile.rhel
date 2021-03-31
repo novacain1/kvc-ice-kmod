@@ -5,8 +5,8 @@ ARG KVER
 RUN dnf update -y \
   && dnf makecache \  
   && dnf -y install wget \
-  && dnf -y install kernel-headers-$KVER.rpm \
-  && dnf -y install kernel-devel-$KVER.rpm \
+  && dnf -y install kernel-headers-$KVER \
+  && dnf -y install kernel-devel-$KVER \
   && dnf install gcc make rpm-build -y \
   && dnf install -y elfutils-libelf-devel module-init-tools 
 
@@ -33,7 +33,7 @@ LABEL io.k8s.display-name="ice driver $KMODVER" \
 COPY --from=compiler /build/RPMS/x86_64/ice-$KMODVER-1.x86_64.rpm .
 
 RUN dnf makecache \
-  && dnf -y install kernel-headers-$KVER.rpm \
-  && dnf -y install kernel-devel-$KVER.rpm \
+  && dnf -y install kernel-headers-$KVER \
+  && dnf -y install kernel-devel-$KVER \
   && dnf install -y ./ice-$KMODVER-1.x86_64.rpm \
   && dnf clean all
