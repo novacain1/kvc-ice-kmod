@@ -97,7 +97,7 @@ build_kmods() {
         # Sanity check to make sure the built kernel modules were really
         # built against the correct module software version
         # Note the tr to delete the trailing carriage return
-        x=$(kvc_c_run "$IMAGE" modinfo -F version "/lib/modules/${KVC_KVER}/${module}.ko" | \
+        x=$(kvc_c_run "$IMAGE" modinfo -F version "/lib/modules/${KVC_KVER}/updates/drivers/net/ethernet/intel/ice/${module}.ko" | \
                                                                             tr -d '\r')
         if [ "${x}" != "${KMOD_SOFTWARE_VERSION}" ]; then
             echo "Module version mismatch within container. rebuilding ${IMAGE}"
@@ -105,7 +105,7 @@ build_kmods() {
         fi
         # Sanity check to make sure the built kernel modules were really
         # built against the desired kernel version
-        x=$(kvc_c_run "$IMAGE" modinfo -F vermagic "/lib/modules/${KVC_KVER}/${module}.ko" | \
+        x=$(kvc_c_run "$IMAGE" modinfo -F vermagic "/lib/modules/${KVC_KVER}/updates/drivers/net/ethernet/intel/ice/${module}.ko" | \
                                                                         cut -d ' ' -f 1)
         if [ "${x}" != "${KVC_KVER}" ]; then
             echo "Module not built against ${KVC_KVER}. rebuilding ${IMAGE}"
@@ -117,12 +117,9 @@ build_kmods() {
 load_kmods() {
     echo "Loading kernel modules using the kernel module container..."
     for module in ${KMOD_NAMES}; do
-        if is_kmod_loaded "${module}"; then
-            echo "Kernel module ${module} already loaded"
-        else
-            module=${module//-/_} # replace any dashes with underscore
-            kvc_c_run --privileged "$IMAGE" modprobe "${module}"
-        fi
+        module=${module//-/_} # replace any dashes with underscore
+        kvc_c_run --privileged "$IMAGE" rmmod "${module}"
+        kvc_c_run --privileged "$IMAGE" modprobe "${module}"
     done
 }
 
