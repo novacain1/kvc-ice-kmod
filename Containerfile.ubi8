@@ -3,28 +3,28 @@ FROM registry.access.redhat.com/ubi8:latest AS builder
 ARG KVER
 
 RUN dnf update -y \
-  && dnf makecache \  
+  && dnf makecache \
   && dnf -y install wget \
   && dnf -y install kernel-headers-$KVER \
   && dnf -y install kernel-devel-$KVER \
   && dnf install gcc make rpm-build -y \
-  && dnf install -y elfutils-libelf-devel module-init-tools 
+  && dnf install -y elfutils-libelf-devel module-init-tools
 
 FROM builder AS compiler
 
 WORKDIR /build/
 
-ARG KMODVER=1.3.2
+ARG KMODVER=1.5.8
 ARG KVER
 
 RUN wget "https://sourceforge.net/projects/e1000/files/ice%20stable/$KMODVER/ice-$KMODVER.tar.gz" \
-  && rpmbuild --define "_topdir `pwd`" -tb ice-$KMODVER.tar.gz 
+  && rpmbuild --define "_topdir `pwd`" -tb ice-$KMODVER.tar.gz
 
 FROM registry.access.redhat.com/ubi8:latest AS runtime
 
 WORKDIR /build/
 
-ARG KMODVER=1.3.2
+ARG KMODVER=1.5.8
 ARG KVER
 
 LABEL io.k8s.display-name="ice driver $KMODVER" \
