@@ -2,10 +2,11 @@ FROM registry.access.redhat.com/ubi8:latest AS builder
 
 ARG KVER
 
-RUN yum-config-manager --enable rhel-8-for-x86_64-nfv-rpms \
-  && dnf update -y \
+RUN dnf -y install yum-utils
+RUN yum-config-manager --enable rhel-8-for-x86_64-nfv-rpms
+
+RUN dnf update -y \
   && dnf makecache \
-  && dnf -y install yum-utils \
   && dnf -y install wget \
   && dnf -y install kernel-rt-devel-$KVER \
   && dnf install gcc make rpm-build -y \
