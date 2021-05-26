@@ -1,14 +1,11 @@
 FROM registry.access.redhat.com/ubi8:latest AS builder
 
-RUN dnf install -y yum-utils \
- && yum-config-manager --enable rhel-8-for-x86_64-nfv-rpms
-
 ARG KVER
 
 RUN dnf update -y \
   && dnf makecache \
   && dnf -y install wget \
-  && dnf -y install kernel-rt-devel-$KVER \
+  && dnf -y install kernel-devel \
   && dnf install gcc make rpm-build -y \
   && dnf install -y elfutils-libelf-devel module-init-tools
 
@@ -35,6 +32,6 @@ LABEL io.k8s.display-name="ice driver $KMODVER" \
 COPY --from=compiler /build/RPMS/x86_64/ice-$KMODVER-1.x86_64.rpm .
 
 RUN dnf makecache \
-  && dnf -y install kernel-rt-devel-$KVER \
+  && dnf -y install kernel-devel \
   && dnf install -y ./ice-$KMODVER-1.x86_64.rpm \
   && dnf clean all
