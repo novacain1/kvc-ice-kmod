@@ -20,7 +20,8 @@ ARG KMODVER=1.5.8
 ARG KVER
 
 RUN wget "https://sourceforge.net/projects/e1000/files/ice%20stable/$KMODVER/ice-$KMODVER.tar.gz" \
-  && rpmbuild --define "_topdir `pwd`" -tb ice-$KMODVER.tar.gz
+  && rpmbuild --define "_topdir `pwd`" --define "_kernel_module_package_buildreqs kernel-rt-devel" \
+  -tb ice-$KMODVER.tar.gz
 
 FROM registry.access.redhat.com/ubi8:latest AS runtime
 
