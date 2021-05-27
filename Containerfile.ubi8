@@ -35,6 +35,9 @@ LABEL io.k8s.display-name="ice driver $KMODVER" \
 
 COPY --from=compiler /build/RPMS/x86_64/ice-$KMODVER-1.x86_64.rpm .
 
+RUN dnf -y install yum-utils
+RUN yum-config-manager --enable rhel-8-for-x86_64-nfv-rpms
+
 RUN dnf makecache \
   && dnf -y install kernel-rt-devel-$KVER \
   && dnf install -y ./ice-$KMODVER-1.x86_64.rpm \
