@@ -16,11 +16,11 @@ FROM builder AS compiler
 
 WORKDIR /build/
 
-ARG KMODVER=1.6.0
+ARG KMODVER=1.6.0_rc29
 ARG KVER
 
 #RUN wget "https://sourceforge.net/projects/e1000/files/ice%20stable/$KMODVER/ice-$KMODVER.tar.gz" \
-RUN wget "http://172.28.11.52/software/ice-1.6.0_rc29.tar.gz" \
+RUN wget "http://172.28.11.52/software/ice-$KMODVER.tar.gz" \
   && rpmbuild --define "_topdir `pwd`" --define "kernel_module_package_buildreqs kernel-rt-devel" \
   -tb ice-$KMODVER.tar.gz
 
@@ -28,7 +28,7 @@ FROM registry.access.redhat.com/ubi8:latest AS runtime
 
 WORKDIR /build/
 
-ARG KMODVER=1.6.0
+ARG KMODVER=1.6.0_rc29
 ARG KVER
 
 LABEL io.k8s.display-name="ice driver $KMODVER" \
